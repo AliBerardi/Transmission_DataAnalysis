@@ -71,31 +71,12 @@ void compute_CS(double L, int bins) {
   TGraphErrors *gJH =
       new TGraphErrors("./input_files/JHarvey.dat", "%lg %lg %lg");
 
-  // convert the histogram into a graph to have a line that connects the dots
-  int n = h_CS->GetNbinsX();
-  TGraphErrors *ge = new TGraphErrors(n);
-  for (int i = 1; i <= n; ++i) {
-    double x = h_CS->GetBinCenter(i);
-    double y = h_CS->GetBinContent(i);
-    double ex = 0.0;
-    double ey = h_CS->GetBinError(i);
-    ge->SetPoint(i - 1, x, y);
-    ge->SetPointError(i - 1, ex, ey);
-  }
-
   TCanvas *Ccs = new TCanvas("Ccs", "Cross section", 2000, 1500);
   Ccs->cd();
   h_CS->SetTitle("(n, natCu) total cross section");
   h_CS->GetYaxis()->SetTitle("Cross section (barn)");
   h_CS->GetXaxis()->SetTitle("Neutron energy (eV)");
   h_CS->SetLineColor(kBlue);
-
-  ge->SetTitle("(n, natCu) total cross section");
-  ge->GetYaxis()->SetTitle("Cross section (barn)");
-  ge->GetXaxis()->SetTitle("Neutron energy (eV)");
-  ge->SetLineColor(kBlue);
-  // ge->Draw("PL"); // punti + linea + assi
-
   h_CS->Draw("e1");
 
   gPad->SetLogx(1);
@@ -120,8 +101,6 @@ void compute_CS(double L, int bins) {
 }
 
 void tof_to_E(double L, int bins) {
-
-  // double L = 181.9;
 
   // convert_to_E(L, bins);
   compute_CS(L, bins);
