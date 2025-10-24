@@ -2,21 +2,16 @@
 ########################################################################################################################################################################################################################################
 # This program imports the module Histograms from the file Histograms_AllRuns.py
 # From the amplitude histograms imported it caluclates the efficiency.
-# The efficiency is the number of counts above an amplitude threshold(cut_a),
-# normalized to the number of protons.
-# The efficiency values are plotted in a graph as a function of the run number,
-# and then they are grouped in 2 histograms, separating the 2 sets of Sin or Sout,
-# from which it is possible to extract the error associated to the efficiency.
-# In the efficiency graph, for each set are plotted a horizontal line, corresponding to the mean value,
-# and two dashed lines at a distance of 2 standard deviations from the mean.
-# When calling the main function, it is possible to choose the detector(DET),
-# select between Sample in and Sample out(run_type),
-# choose the input file for which the analysis need to be performed,
-# and finally choose the number of bins of the amplitude histograms.
+# The efficiency is the number of counts above an amplitude threshold (cut_a), normalized to the number of protons.
+# The efficiency values are plotted in a graph as a function of the run number, and then they are grouped in 2 histograms, separating the 2 sets of Sin or Sout, from which it is possible to extract the error associated to the efficiency.
+# In the efficiency graph, for each set are plotted a horizontal line, corresponding to the mean value, and two dashed lines at a distance of 2 standard deviations from the mean.
+# When calling the main function, it is possible to choose the detector (DET), select between Sample in and Sample out (run_type), choose the input file for which the
+# analysis need  to be performed, and finally choose the number of bins of the amplitude histograms.
 ########################################################################################################################################################################################################################################
 ########################################################################################################################################################################################################################################
 
-#import libraries
+
+# import libraries
 import ROOT
 import numpy as np
 import math
@@ -36,7 +31,7 @@ def main(DET: int, run_type: str, cmnd_name: str, nbins: int):
 
     LEN = len(Histos_CUTamp)
 
-# Import data from cmnd file
+    # Import data from cmnd file
     cfg = cr.ConfigReader(cmnd_name)
     Sin1 = cfg.get_int_vector("Sin1")
     Sin2 = cfg.get_int_vector("Sin2")
@@ -65,7 +60,7 @@ def main(DET: int, run_type: str, cmnd_name: str, nbins: int):
     print("Building efficiency graph")
 
     #############################################################
-# Calculate efficiency
+    # Calculate efficiency
     Efficiency = []
     Y_ERR = []
     for j in range(0, LEN):
@@ -82,12 +77,12 @@ def main(DET: int, run_type: str, cmnd_name: str, nbins: int):
     ex = np.zeros_like(x_runs, dtype='float64')  # No x errors
     ey = np.array(Y_ERR, dtype='float64')
 
-# check for NaN / Inf
+    # check for NaN/Inf
     finite = np.isfinite(y_ratio) & np.isfinite(ey)
     x_runs, y_ratio, ex, ey = x_runs[finite], y_ratio[finite], ex[finite], ey[finite]
     LEN = len(x_runs)
 
-# divide in 2 colors
+    # divide in 2 colors
     if run_type == "Sout":
         n = len(Sout1)
     if run_type == "Sin":
@@ -102,7 +97,7 @@ def main(DET: int, run_type: str, cmnd_name: str, nbins: int):
     ex_S2 = ex[n:]
 
     #############################################################
-# Histo to extract error on efficiency
+    # Histo to extract error on efficiency
     min = np.mean(y_ratio)-(0.5e-13)
     max = np.mean(y_ratio)+(0.5e-13)
     h_E1 = ROOT.TH1F("Efficiency histo 1", "Efficiency distribution detector " +
@@ -125,7 +120,7 @@ def main(DET: int, run_type: str, cmnd_name: str, nbins: int):
     h_E2.GetXaxis().SetTitle("Efficiency (Counts / N protons)")
     h_E2.GetYaxis().SetTitle("Entries")
 
-# draw graph of efficiency
+    # draw graph of efficiency
     graph1 = ROOT.TGraphErrors(n, np.array(x_S1, dtype='float64'), np.array(
         y_S1, dtype='float64'), np.array(ex_S1, dtype='float64'), np.array(ey_S1, dtype='float64'))
     graph1.SetTitle(
@@ -186,10 +181,9 @@ def main(DET: int, run_type: str, cmnd_name: str, nbins: int):
     pave.SetFillColor(ROOT.kWhite)
     pave.Draw()
     c_r2.Update()
-    c_r2.SaveAs(
-        f"./OUTPUT/Efficiency/Efficiency_singleruns_det{DET}_{run_type}.png")
+    c_r2.SaveAs(f"./OUTPUT/Efficiency/Efficiency_singleruns_det{DET}_{run_type}.png")
 
-# Draw error graph
+    # Draw error graph
     c_E = ROOT.TCanvas("E", "Canvas", 1200, 750)
     c_E.Divide(2, 1)
     c_E.cd(1)
