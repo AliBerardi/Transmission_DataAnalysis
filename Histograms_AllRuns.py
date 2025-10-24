@@ -61,8 +61,7 @@ def dataframe(DET: int, run_type: str, cmnd_name: str):
 
     filelist = data(DET, run_type, cmnd_name)[0]
 
-# I create a list which I fill with dataframes corresponding to my detector(    \
-    FC - U) for each run
+# I create a list which I fill with dataframes corresponding to my detector(FC-U) for each run
     DF_det=[]
     for file in filelist:
         df=ROOT.RDataFrame("FC-U", file)
@@ -119,9 +118,7 @@ def Histograms(DET: int, run_type: str, cmnd_name: str, nbins: int):
 # define dictionaries to store the amplitude values
     d_Amp={}
     Amp={}
-# define lists                                                                  \
-  to store the histograms,                                                     \
-      the number of entries and the x position of the maximum bin
+# define lists to store the histograms,the number of entries and the x position of the maximum bin
 
     Histos_CUTamp=[]
     Entries=[]
@@ -129,8 +126,7 @@ def Histograms(DET: int, run_type: str, cmnd_name: str, nbins: int):
 
     for i in range(0, len(DF_det)):  # loop over the datframes for the different runs
 
-# For each run, I extract all the amplitudes from the                           \
-                   corresponding dataframe and put them in a dictionary
+# For each run, I extract all the amplitudes from the corresponding dataframe and put them in a dictionary
         d_Amp[i]=DF_det[i].AsNumpy(["amp"])
         Amp[i]=d_Amp[i]["amp"]
         Amplitude=np.array(Amp[i])  # convert the list into a numpy array
@@ -174,8 +170,7 @@ def Plot(DET: int, run_type: str, cmnd_name: str, nbins: int, first_run_plot: in
     Histos = []
 
     for i in range(0, len(DF_det)):
-# For each run, extract all the amplitudes from the                             \
-                   corresponding dataframe and put them in a dictionary
+# For each run, extract all the amplitudes from the corresponding dataframe and put them in a dictionary
         d_Amp[i] = DF_det[i].AsNumpy(["amp"])
         Amp[i] = d_Amp[i]["amp"]
         Amplitude = np.array(Amp[i])  # convert the list into a numpy array
