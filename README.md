@@ -2,10 +2,7 @@
 
 
 
-## The project
-
-
-### File structure
+## File structure
 This project is organized into the following directories and key files:
 
 - `config/` — Files to enable reading data from input files:
@@ -17,7 +14,7 @@ This project is organized into the following directories and key files:
 - `input_files/` — Input files:
   - `Efficiency_plot_runlists.cmnd`: Input parameters for code Efficiency_plot_runlists.py
   - `Histograms_AllRuns.cmnd`: Input parameters for code Histograms_AllRuns.py
-  - `Transmission_ratio_final.cmnd`: Input parameters for code Transmission_ratio_final.C
+  - `Transmission_ratio_final.cmnd`: Input parameters for code Transmission_final.C
 
 - `OUTPUT/` — Folder to store the outputs
 
@@ -56,7 +53,7 @@ Or:
 pip install .
 ```
 
-### Running the codes
+### Examples of running the codes
 
 Run python codes with:
 ```bash
@@ -66,6 +63,8 @@ python3 EFFICIENCY_AllRuns.py
 Run C++ macros with:
 ```bash
 root -l -b -q 'Transmission_final.C(200)'
+```
+```bash
 root -l -b -q 'tof_to_E(182.1, 200)'
 ```
 
