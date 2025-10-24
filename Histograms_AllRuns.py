@@ -1,16 +1,25 @@
 ########################################################################################################################################################################
-#  This program analyses single runs and for each creates the amplitude spectra, normalized to the number of protons.
-#  It is organized in functions.
-#  The first function in this program builds the data path reading input from a cmnd file.
-#  The next function builds the dataframe for the detector of interest.
-#  The following function reads the PKUP detector tree and calculates the pulse intensity of each run, which will be used to normalize the histograms.
-#  The next function builds the amplitude histograms with cuts. It returns a tuple with the list of all the amplitude histograms
-#  (one for each run), the list of the position of the bin with the maximum amplitude, the number of entries and the pulse intensity of each run.
-#  There is a last function which can be used to plot the full amplitude histogram of a few runs. For example if, from the general plot, a strange behaviour is observed,
-#  this can be useful to analyze in detail the problematic runs.
+#This program analyses single runs and for each creates the amplitude spectra,  \
+    normalized to the number of protons.
+#It is organized in functions.
+#The first function in this program builds the data path reading input from a  \
+    cmnd file.
+#The next function builds the dataframe for the detector of interest.
+#The following function reads the PKUP detector tree and calculates the pulse  \
+    intensity of each run,                                                     \
+    which will be used to normalize the histograms.
+#The next function builds the amplitude histograms with cuts.It returns a      \
+    tuple with the list of all the amplitude histograms
+#(one for each run),                                                            \
+  the list of the position of the bin with the maximum amplitude,              \
+  the number of entries and the pulse intensity of each run.
+#There is a last function which can be used to plot the full amplitude         \
+    histogram of a few runs.For example if,                                    \
+    from the general plot, a strange behaviour is observed,
+#this can be useful to analyze in detail the problematic runs.
 ########################################################################################################################################################################
 
-# import libraries
+#import libraries
 import ROOT
 import numpy as np
 import pandas as pd
@@ -48,23 +57,22 @@ def data(DET: int, run_type: str, cmnd_name: str):
 
     return (filelist, runlist)
 
-
-# Build dataframe for the detector of interest
+#Build dataframe for the detector of interest
 def dataframe(DET: int, run_type: str, cmnd_name: str):
 
     filelist = data(DET, run_type, cmnd_name)[0]
 
-    # I create a list which I fill with dataframes corresponding to my detector (FC-U) for each run
+#I create a list which I fill with dataframes corresponding to my detector(    \
+    FC - U) for each run
     DF_det = []
     for file in filelist:
         df = ROOT.RDataFrame("FC-U", file)
-        # filter dataframe for the dector of interest
+#filter dataframe for the dector of interest
         df = df.Filter(f'detn=={DET}')
         DF_det.append(df)
     return (DF_det)
 
-
-# extract Pulse Intensity from PKUP
+#extract Pulse Intensity from PKUP
 def PulseInt(DET: int, run_type: str, cmnd_name: str):
 
     filelist = data(DET, run_type, cmnd_name)[0]
@@ -82,8 +90,7 @@ def PulseInt(DET: int, run_type: str, cmnd_name: str):
         PI_TOT[k] = float(np.sum(arr, dtype=np.float64))
     return (PI_TOT)
 
-
-# Create the amplitude histograms
+#Create the amplitude histograms
 def Histograms(DET: int, run_type: str, cmnd_name: str, nbins: int):
 
     runlist = data(DET, run_type, cmnd_name)[1]
@@ -110,10 +117,12 @@ def Histograms(DET: int, run_type: str, cmnd_name: str, nbins: int):
     print("With amplitude threshold: ", int(cut_a))
     print(f"Processing {run_type} runs: \n", runlist)
 
-    # define dictionaries to store the amplitude values
+#define dictionaries to store the amplitude values
     d_Amp = {}
     Amp = {}
-    # define lists to store the histograms, the number of entries and the x position of the maximum bin
+#define lists                                                                  \
+  to store the histograms,                                                     \
+      the number of entries and the x position of the maximum bin
 
     Histos_CUTamp = []
     Entries = []
@@ -121,12 +130,13 @@ def Histograms(DET: int, run_type: str, cmnd_name: str, nbins: int):
 
     for i in range(0, len(DF_det)):  # loop over the datframes for the different runs
 
-        # For each run, I extract all the amplitudes from the corresponding dataframe and put them in a dictionary
+#For each run, I extract all the amplitudes from the                           \
+                   corresponding dataframe and put them in a dictionary
         d_Amp[i] = DF_det[i].AsNumpy(["amp"])
         Amp[i] = d_Amp[i]["amp"]
         Amplitude = np.array(Amp[i])  # convert the list into a numpy array
 
-        # histogram with cut on amplitude
+#histogram with cut on amplitude
         Amplitude_cut = Amplitude[Amplitude > cut_a]
         histo_cut = ROOT.TH1F(
             f"Amplitude_histo_cut_{i}", f"Amplitudes detector {DET} with cut - {run_type}", nbins, 0, 45.e+3)
@@ -141,15 +151,14 @@ def Histograms(DET: int, run_type: str, cmnd_name: str, nbins: int):
 
         Histos_CUTamp.append(histo_cut)
 
-        # Get the position of the maximum bin and store it in a list
+#Get the position of the maximum bin and store it in a list
         max_bin = histo_cut.GetMaximumBin()
         x_max = histo_cut.GetBinCenter(max_bin)
         MAX_BIN.append(x_max)
 
     return (Histos_CUTamp, MAX_BIN, Entries, PI_TOT)
 
-
-# You can call this function if you want to draw the amplitudes of some runs.
+#You can call this function if you want to draw the amplitudes of some runs.
 
 def Plot(DET: int, run_type: str, cmnd_name: str, nbins: int, first_run_plot: int, last_run_plot: int):
 
@@ -166,12 +175,13 @@ def Plot(DET: int, run_type: str, cmnd_name: str, nbins: int, first_run_plot: in
     Histos = []
 
     for i in range(0, len(DF_det)):
-        # For each run, extract all the amplitudes from the corresponding dataframe and put them in a dictionary
+#For each run, extract all the amplitudes from the                             \
+                   corresponding dataframe and put them in a dictionary
         d_Amp[i] = DF_det[i].AsNumpy(["amp"])
         Amp[i] = d_Amp[i]["amp"]
         Amplitude = np.array(Amp[i])  # convert the list into a numpy array
 
-        # Define an histogram and fill it with the amplitudes
+#Define an histogram and fill it with the amplitudes
         histo = ROOT.TH1F(
             f"Amplitude_histo_{i}", f"Amplitudes detector {DET} - {run_type}", nbins, 0, 45.e+3)
         for x in Amplitude:
@@ -184,7 +194,7 @@ def Plot(DET: int, run_type: str, cmnd_name: str, nbins: int, first_run_plot: in
 
         Histos.append(histo)
 
-    # Draw histogram of amplitudes
+#Draw histogram of amplitudes
 
     colors = [ROOT.kBlue, 4, 6, 7, 8, 9, 28, 30, 32, 34, 36, 38, 40, 41, 42, 44, 46, 48, 50, 52,
               55, 57, 58, 60, 62, 64, 65, 67, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90]  # 2
