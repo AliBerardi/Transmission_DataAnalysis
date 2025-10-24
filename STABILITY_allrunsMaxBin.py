@@ -1,23 +1,22 @@
 ################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
-#This program imports the module Histograms from the file Histograms_AllRuns.py
-#It takes the position of the maximum above the amplitude threshold and plots  \
-    it in a graph as a function of the run number.
-#It makes a distinction between the 2 sets of data by plotting them in         \
-    different colours.
-#When calling the main function, it is possible to choose the detector(DET),   \
-    select between Sample in and Sample out(run_type),                         \
-    choose the input file for which the
-#analysis need to be performed,                                                \
-    and finally choose the number of bins of the amplitude histograms.
-    ################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
+# This program imports the module Histograms from the file Histograms_AllRuns.py
+# It takes the position of the maximum above the amplitude threshold and plots
+# it in a graph as a function of the run number.
+# It makes a distinction between the 2 sets of data by plotting them in
+# different colours.
+# When calling the main function, it is possible to choose the detector(DET),
+# select between Sample in and Sample out(run_type),
+# choose the input file for which the analysis need to be performed,
+# and finally choose the number of bins of the amplitude histograms.
+################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 
-#import libraries
+# import libraries
     import ROOT import numpy as np import math
 
         import configreader_cpp as cr from Histograms_AllRuns import Histograms
 
             def
-            main(DET : int, run_type : str, cmnd_name : str, nbins : int)
+            main(DET: int, run_type: str, cmnd_name: str, nbins: int)
     :
 
       ROOT.gROOT.SetBatch(True)
@@ -42,7 +41,7 @@ PI_TOT = Histograms(DET, run_type, cmnd_name, nbins)
                          print("Building stability graph: position of maximum "
                                "amplitude over the runs")
 
-#Build graph with maximum peak values
+# Build graph with maximum peak values
 
                              x_runs = np.arange(LEN, dtype = "float64") ex =
                      np.zeros(LEN, dtype = "float64") MAX_BIN_array =
@@ -51,7 +50,7 @@ PI_TOT = Histograms(DET, run_type, cmnd_name, nbins)
                                  bin_width / math.sqrt(12) Y_ERR =
                                      np.full(LEN, y_err)
 
-#separate set 1 and 2 because I want to plot them in different colours
+# separate set 1 and 2 because I want to plot them in different colours
                                          split_lengths = {
                                        "Sout" : len(Sout1),
                                        "Sin" : len(Sin1),

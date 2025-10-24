@@ -40,7 +40,7 @@
 
 using namespace std;
 
-void Transmission_ratio_dedipara_final(int BinPerDecade) {
+void Transmission_final(int BinPerDecade) {
 
   string cmnd_filename =
       "input_files/Transmission_ratio_final.cmnd"; // for all the data (with
