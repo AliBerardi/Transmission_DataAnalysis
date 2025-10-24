@@ -1,5 +1,5 @@
 # Transmission_DataAnalysis
-
+Project to analyse data of n_TOF natCu Transmission campaign.
 
 
 ## File structure
@@ -22,8 +22,9 @@ This project is organized into the following directories and key files:
 - `STABILITY_allrunsMaxBin.py` : Imports the module that creates the amplitude histograms from Histograms_AllRuns.py and performs the detector stability analysis
 - `EFFICIENCY_AllRuns.py` : Imports the module that creates the amplitude histograms from Histograms_AllRuns.py and performs an efficiency study
 - `Transmission_final.C` : Creates ToF histograms and Transmission ratio
-- `tof_to_E.C` : Converts Transmission graph from time to energy domain and computes cross section
-*Note:* in this code you have to change the path to your TTOFSORT
+- `tof_to_E.C` : Converts Transmission graph from time to energy domain and computes cross section<br>
+*Note:* in this code you have to change the path to your TTOFSORT<br>
+*Note:* this code works only if you have first created a transmission histogram (by running the code Transmission_final.C) with the same number of bins
 
 - `README.md` : Documentation and usage instructions (this file)
  
