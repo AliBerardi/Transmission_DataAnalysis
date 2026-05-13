@@ -14,7 +14,7 @@
 #include "/eos/user/a/alberard/TTOFSort/TTOFSort_nTOF.cxx"
 #endif
 
-using namespace std;
+//using namespace std;
 
 TH1D *convert_to_E(double L, int bins) {
 
@@ -32,6 +32,22 @@ TH1D *convert_to_E(double L, int bins) {
 
   TH1D *h_E_TT = cnv_hst_t2e(h_TT, L, t0);
 
+
+  //create file .dat
+  std::ofstream yield_out(Form("./OUTPUT/Transm_%dbinperdec_adjustedL_30MeV.dat", bins));
+    yield_out << std::scientific;
+    for (int j = 0; j < h_E_TT->GetNbinsX(); ++j)
+    {
+        double x = h_E_TT->GetBinCenter(j);
+        if (x > 0.02 && x < 30.e6)
+            yield_out << std::setw(20) << std::setprecision(10) << x
+                      << std::setw(20) << std::setprecision(10) << h_E_TT->GetBinContent(j)
+                      << std::setw(20) << std::setprecision(10) << h_E_TT->GetBinError(j)
+                      << std::endl;
+    }
+    yield_out.close();
+  
+
   TCanvas *c_TT_E =
       new TCanvas("C_Transm_final", "Canvas Transm final", 2000, 1500);
   h_E_TT->Draw("HIST");
@@ -40,7 +56,7 @@ TH1D *convert_to_E(double L, int bins) {
   string output_path =
       Form("./OUTPUT/Transmission/Total/Transmission_energy__L%.2f__%dbin.root",
            L, bins);
-  c_TT_E->SaveAs(output_path.c_str());
+  //c_TT_E->SaveAs(output_path.c_str());
 
   return h_E_TT;
 }
@@ -100,8 +116,10 @@ void compute_CS(double L, int bins) {
            L, bins));
 }
 
-void tof_to_E(double L, int bins) {
+void tof_to_E( int bins) { //double L,
 
-  // convert_to_E(L, bins);
-  compute_CS(L, bins);
+  double L = 182.3683883;
+
+  convert_to_E(L, bins);
+  //compute_CS(L, bins);
 }
