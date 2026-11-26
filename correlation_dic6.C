@@ -81,13 +81,18 @@ void correlation_dic6()
 
   TGraphErrors *graph_A1 = new TGraphErrors();
   graph_A1->SetName("graph_A1");
-  graph_A1->SetTitle(";Proton Intesity; DIC6 counts");
+  graph_A1->SetTitle(";Proton Intensity; DIC6 counts");
   graph_A1->SetMarkerStyle(20);
 
   TGraphErrors *graph_2 = new TGraphErrors();
   graph_2->SetTitle(";DIC6 counts; DIC6 counts/Proton Intensity");
   graph_2->SetMarkerStyle(20);
 
+  TGraphErrors *graph_3 = new TGraphErrors();
+  graph_3->SetTitle(";Proton Intensity; DIC6 counts/Proton Intensity");
+  graph_3->SetMarkerStyle(20);
+
+  
   // loop over all the runs of DIC6
   for (int k = 0; k < n_runs; ++k)
   {
@@ -215,12 +220,14 @@ void correlation_dic6()
       std::cout << "ratio: " << ratio;
       std::cout << "\n";
       graph_A1->SetPoint(graph_A1->GetN(), PI_pkup, dic_counts);
-      graph_2->SetPoint(graph_2->GetN(), ratio, dic_counts);
+      graph_2->SetPoint(graph_2->GetN(), dic_counts, ratio);
+      graph_3->SetPoint(graph_3->GetN(), PI_pkup, ratio);
       // std::cout << "DIC6 counts/N protons PKUP for A1: " << static_cast<double>(counts_DIC_A1) / PI_pkup << std::endl;
       // std::cout << "" << std::endl;
 
       graph_A1->SetPointError(graph_A1->GetN() - 1, sqrt(PI_pkup), sqrt(dic_counts));
       graph_2->SetPointError(graph_2->GetN() - 1, 0, ratio * sqrt(1. / dic_counts + 1. / PI_pkup));
+      graph_3->SetPointError(graph_3->GetN() - 1, 0, ratio * sqrt(1. / dic_counts + 1. / PI_pkup));
     }
     else
     {
@@ -238,6 +245,8 @@ void correlation_dic6()
 
   } // close loop on the runs
 
+  //graph_A1->Fit();
+
   TCanvas *cRatio = new TCanvas("DIC_PI", "DIC6 counts per PI_PKUP", 1200, 800);
   graph_A1->Draw("AP");
 
@@ -253,11 +262,16 @@ void correlation_dic6()
                        "");
   cutsLegend->Draw();
 
-  TCanvas *c2 = new TCanvas("PI/DIC_DIC", "PI/DIC_DIC", 1200, 800);
+  TCanvas *c2 = new TCanvas("DIC_PI/DIC", "DIC_PI/DIC", 1200, 800);
   graph_2->Draw("AP");
+  cutsLegend->Draw();
+
+  TCanvas *c3 = new TCanvas("DIC_PI/PI", "DIC_PI/PI", 1200, 800);
+  graph_3->Draw("AP");
   cutsLegend->Draw();
 
   TFile *f = TFile::Open("OUTPUT/DIC6/correlations/correlation_DIC6_PI.root", "RECREATE");
   cRatio->Write();
   c2->Write();
+  c3->Write();
 }
